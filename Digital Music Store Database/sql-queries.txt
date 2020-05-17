@@ -1,0 +1,61 @@
+SQL Queries used to create visualization.
+
+
+Q 1 : Top 5 artist who recorded the most albums?
+
+SELECT Artist.Name, COUNT(Album.Title) as Total_Album
+FROM Artist
+JOIN Album
+on Artist.ArtistId=Album.ArtistId
+GROUP by Artist.Name
+ORDER by 2 DESC
+LIMIT 5
+
+
+
+
+Q 2 : Prefered Media Type liked by customers?
+
+SELECT mt.name, COUNT(DISTINCT c.customerid) Customers
+FROM customer c
+JOIN invoice i
+ON c.customerid = i.customerid
+JOIN invoiceline iv
+ON i.invoiceid = iv.invoiceid
+JOIN Track t
+ON iv.trackid = t.trackid
+JOIN MediaType mt
+ON mt.mediatypeid = t.mediatypeid
+GROUP BY mt.name
+ORDER BY c.customerid DESC
+
+
+
+Q 3 : What are the top Tracks which are sold by genres?
+
+SELECT g.name, COUNT(t.trackid) AS Sold
+FROM genre g
+JOIN Track t
+ON g.genreid = t.genreid
+JOIN InvoiceLine iv
+ON iv.trackid = t.trackid
+GROUP BY g.name
+ORDER BY Sold DESC;
+
+
+
+Q 4 : What are the total Spent and track sold by countries.
+
+SELECT i.billingcountry AS Country, SUM(iv.unitprice * iv.quantity) AS Sales, COUNT(t.trackid) AS No_Tracks
+FROM Invoice i
+JOIN InvoiceLine iv
+ON i.invoiceid = iv.invoiceid
+JOIN track t
+ON t.trackid = iv.trackid
+GROUP BY i.billingcountry
+ORDER BY sales DESC;
+
+
+
+
+
